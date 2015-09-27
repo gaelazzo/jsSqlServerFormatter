@@ -1,14 +1,14 @@
 {
-  "name": "jsDataQuery",
+  "name": "jsSqlServerFormatter",
   "version": "1.0.1",
   "description": "Query functions convertable into sql expressions",
-  "main": "src/jsDataQuery.js",
+  "main": "src/jsSqlServerFormatter.js",
   "scripts": {
     "test": "grunt test"
   },
   "dependencies": {
     "lodash": "~3.1.0",
-    "jsDataQuery": "git://github.com/gaelazzo/jsdataquery.git"
+    "jsDataQuery": "git://github.com/gaelazzo/jsSqlServerFormatter.git"
   },
   "devDependencies": {
     "grunt": "~0.4.0",
@@ -27,7 +27,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gaelazzo/jsDataQuery"
+    "url": "https://github.com/gaelazzo/jsSqlServerFormatter"
   },
   "keywords": [
     "query",
@@ -39,7 +39,7 @@
   "author": "Gaetano Lazzo",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/gaelazzo/jsDataQuery/issues"
+    "url": "https://github.com/gaelazzo/jsSqlServerFormatter/issues"
   },
-  "homepage": "https://github.com/gaelazzo/jsDataQuery#readme"
+  "homepage": "https://github.com/gaelazzo/jsSqlServerFormatter#readme"
 }
