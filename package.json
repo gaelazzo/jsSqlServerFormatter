@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "lodash": "~3.1.0",
-    "jsDataQuery": "git://github.com/gaelazzo/jsSqlServerFormatter.git"
+    "jsDataQuery": "git://github.com/gaelazzo/jsDataQuery.git"
   },
   "devDependencies": {
     "grunt": "~0.4.0",
