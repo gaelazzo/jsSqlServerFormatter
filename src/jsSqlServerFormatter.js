@@ -126,8 +126,8 @@
             if (_.isDate(v)) {
                 if (v.getHours() === 0 && v.getMinutes() === 0 && v.getSeconds() === 0 && v.getMilliseconds() === 0) {
                     return '{d \'' +
-                        leftPad(v.getFullYear(), 4, '0') +
-                        leftPad(v.getMonth() + 1, 2, '0') + //javascripts counts months starting from 0!!!
+                        leftPad(v.getFullYear(), 4, '0') +'-'+
+                        leftPad(v.getMonth() + 1, 2, '0') +'-'+ //javascripts counts months starting from 0!!!
                         leftPad(v.getDate(), 2, '0') + '\'}';
                 }
                 return '{ts \'' +
