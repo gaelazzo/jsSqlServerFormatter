@@ -1,4 +1,5 @@
 /*jslint nomen: true*/
+/*globals Environment global */
 ;
 'use strict';
 /**
@@ -151,7 +152,7 @@
          *  dataquery objects. This can be used to manage slightly more generic objects like null values,
          *  undefined, arrays. Arrays are converted into lists.
          * @method toSql
-         * @param {function} v  function to be converted
+         * @param {sqlFun|Array|object|null|undefined} v  function to be converted
          * @param {Environment} [environment]  context into which the expression has to be evaluated
          * @return {string}
          * @example eq('a',1) is converted into 'a=1'
@@ -179,6 +180,7 @@
          * @method conditionToSql
          * @param cond
          * @param environment
+         * @return {string}
          */
         function conditionToSql(cond, environment) {
             if (isEmptyCondition(cond)) {
@@ -196,7 +198,7 @@
         /**
          * Surround expression in parenthesis
          * @method doPar
-         * @param expr
+         * @param {string} expr
          * @returns {string}
          */
         function doPar(expr) {
@@ -256,8 +258,9 @@
         /**
          * gets the 'a > b' representation for the db
          * @method gt
-         * @param a
-         * @param b
+         * @param {sqlFun|Array|object|null|undefined} a
+         * @param {sqlFun|Array|object|null|undefined} b
+         * @param {Environment} context
          * @returns {string}
          * @example gt('a','b') would be converted into 'a>b'
          */
@@ -265,10 +268,24 @@
             return doPar(toSql(a, context) + ">" + toSql(b, context));
         };
 
+        /**
+         * gets the aggregates of mimimum value
+         * @method min
+         * @param {sqlFun|Array|object|null|undefined} expr
+         * @param {Environment} context
+         * @returns {string}
+         */
         $sqlf.min = function (expr, context) {
             return 'min' + doPar(toSql(expr, context));
         };
 
+        /**
+         * gets the aggregates of max value
+         * @method max
+         * @param {sqlFun|Array|object|null|undefined} expr
+         * @param {Environment} context
+         * @returns {string}
+         */
         $sqlf.max = function (expr, context) {
             return 'max' + doPar(toSql(expr, context));
         };
@@ -277,10 +294,10 @@
         /**
          * gets a substring from the expression
          * @method substring
-         * @param expr
+         * @param {sqlFun|Array|object|null|undefined} expr
          * @param {number} start
          * @param {number} len
-         * @param context
+         * @param {Environment} context
          * @returns {string}
          */
         $sqlf.substring = function (expr, start, len, context) {
@@ -288,10 +305,11 @@
         };
         /**
          * returns the  first object of the array that is not null
-         * @param {string[]} arr
+         * @param {object[]} arr
+         * @param {Environment} context
          * @returns {string}
          */
-        $sqlf.coalesce = function (arr) {
+        $sqlf.coalesce = function (arr,context) {
             return 'coalesce' + doPar(toSql(expr, context));
             doPar(expr.join(','));
         };
@@ -299,8 +317,8 @@
         /**
          * Convert an expression into integer
          * @method convertToInt
-         * @param expr
-         * @param start
+         * @param {sqlFun|Array|object|null|undefined} expr
+         * @param {Environment} context
          * @return {string}
          */
         $sqlf.convertToInt = function (expr, context) {
@@ -309,10 +327,10 @@
 
         /**
          * Convert an expression into integer
-         * @method convertToInt
-         * @param expr
+         * @method convertToString
+         * @param {sqlFun||string||null||undefined} expr
          * @param {number} maxLen
-         * @param context
+         * @param {Environment} context
          * @return {string}
          */
         $sqlf.convertToString = function (expr, maxLen, context) {
@@ -322,8 +340,9 @@
         /**
          * gets the 'a >= b' representation for the db
          * @method ge
-         * @param a
-         * @param b
+         * @param {sqlFun|Array|object|null|undefined} a
+         * @param {sqlFun|Array|object|null|undefined} b
+         * @param {Environment} context
          * @returns {string}
          * @example ge('a','b') would be converted into 'a>=b'
          */
@@ -334,8 +353,9 @@
         /**
          * gets the 'a < b' representation for the db
          * @method lt
-         * @param a
-         * @param b
+         * @param {sqlFun|Array|object|null|undefined} a
+         * @param {sqlFun|Array|object|null|undefined} b
+         * @param {Environment} context
          * @returns {string}
          * @example lt('a','b') would be converted into 'a<b'
          */
@@ -346,8 +366,9 @@
         /**
          * gets the 'a <= b' representation for the db
          * @method le
-         * @param a
-         * @param b
+         * @param {sqlFun|Array|object|null|undefined} a
+         * @param {sqlFun|Array|object|null|undefined} b
+         * @param {Environment} context
          * @returns {string}
          * @example le('a','b') would be converted into 'a<=b'
          */
@@ -359,8 +380,9 @@
         /**
          * gets the 'test if Nth bit is set' representation for the db
          * @method bitSet
-         * @param a
-         * @param b
+         * @param {sqlFun|Array|object|null|undefined} a
+         * @param {sqlFun|Array|object|null|undefined} b
+         * @param {Environment} context
          * @returns {string}
          * @example bitSet('a','3') would be converted into '(a&(1<<3))<>0'
          */
@@ -372,8 +394,9 @@
         /**
          * gets the 'test if Nth bit is not set' representation for the db
          * @method bitClear
-         * @param a
-         * @param b
+         * @param {sqlFun|Array|object|null|undefined} a
+         * @param {sqlFun|Array|object|null|undefined} b
+         * @param {Environment} context
          * @returns {string}
          * @example bitClear('a','3') would be converted into '(a&(1<<3))=0'
          */
@@ -385,7 +408,8 @@
         /**
          * gets the 'not expression' representation for the db
          * @method not
-         * @param a
+         * @param {sqlFun|Array|object|null|undefined} a
+         * @param {Environment} context
          * @returns {string}
          * @example not('a') would be converted into 'not(a)'
          */
@@ -397,7 +421,8 @@
         /**
          * gets the 'not expression' representation for the db
          * @method minus
-         * @param a
+         * @param {sqlFun|Array|object|null|undefined} a
+         * @param {Environment} context
          * @returns {string}
          * @example -('a') would be converted into '-a'
          */
@@ -408,6 +433,7 @@
 
         /**
          * gets the result of boolean "and" between an array of condition
+         * @private
          * @method joinAnd
          * @param {string[]} arr
          * @returns {string}
@@ -422,8 +448,9 @@
 
         /**
          * gets the result of boolean "or" between an array of condition
-         *  @method joinOr
-         * @param arr
+         * @private
+         * @method joinOr
+         * @param {string[]} arr
          * @returns {string}
          * @example joinOr(['a','b','c']) would give 'a or b or c'
          */
@@ -437,8 +464,9 @@
 
         /**
          * gets the result of the sum of an array of expression
-         *  @method add
-         * @param arr
+         * @method add
+         * @param {sqlFun|Array|object|null|undefined []} arr
+         * @param {Environment} context
          * @returns {string}
          * @example add(['a','b','c']) would give 'a+b+c'
          */
@@ -451,7 +479,7 @@
         /**
          * gets the result of the sum of an array of expression
          * @method concat
-         * @param arr
+         * @param {sqlFun|Array|object|null|undefined []} arr
          * @returns {string}
          * @example add(['a','b','c']) would give 'a+b+c'
          */
@@ -464,12 +492,11 @@
         /**
          * gets the expression a-b
          * @method sub
-         * @param {sqlFun} a
-         * @param {sqlFun} b
-         * @param context
+         * @param {sqlFun|object|null|undefined} a
+         * @param {sqlFun|object|null|undefined} b
+         * @param {Environment} context
          * @returns {string}
          */
-
         $sqlf.sub = function (a, b, context) {
             return doPar([toSql(a, context), toSql(b, context)].join("-"));
         };
@@ -478,21 +505,33 @@
         /**
          * gets the expression a/b
          * @method div
-         * @param {sqlFun} a
-         * @param {sqlFun} b
-         * @param context
+         * @param {sqlFun|object|null|undefined} a
+         * @param {sqlFun|object|null|undefined} b
+         * @param {Environment} context
          * @returns {string}
          */
-
         $sqlf.div = function (a, b, context) {
             return doPar([toSql(a, context), toSql(b, context)].join("/"));
         };
 
+        /**
+         * gets the expression sum(expr)
+         * @method sum
+         * @param {sqlFun|object|null|undefined} expr
+         * @param {Environment} context
+         * @returns {string}
+         */
         $sqlf.sum = function (expr, context) {
             return 'sum' + doPar(toSql(expr, context));
         };
 
-
+        /**
+         * gets the expression distinct expr1, expr2,..
+         * @method sum
+         * @param {sqlFun|object|null|undefined []} expr
+         * @param {Environment} context
+         * @returns {string}
+         */
         $sqlf.distinct = function (exprList, context) {
             return 'distinct ' + _.map(exprList, function (expr) {
                     return toSql(expr, context);
@@ -502,8 +541,9 @@
         /**
          * gets the 'elements belongs to list' sql condition
          * @method isIn
-         * @param expr
-         * @param list
+         * @param  {sqlFun|object|null|undefined}expr
+         * @param  {sqlFun|object|null|undefined []} list
+         * @param {Environment} context
          * @returns {string}
          * @example isIn('el',[1,2,3,4]) would be compiled into 'el in (1,2,3,4)'
          */
@@ -515,9 +555,10 @@
         /**
          * get the '(expr (bitwise and) testMask) equal to val ' sql condition
          * @method testMask
-         * @param expr
-         * @param mask
-         * @param val
+         * @param {sqlFun|object|null|undefined} expr
+         * @param {sqlFun|object|null|undefined} mask
+         * @param {sqlFun|object|null|undefined} val
+         * @param {Environment} context
          * @returns {string}
          * @example testMask('a',5,1) would give '(a &  5) = 1'
          */
@@ -528,9 +569,10 @@
         /**
          * get the 'expr between min and max' sql condition
          * @method between
-         * @param expr
-         * @param min
-         * @param max
+         * @param {sqlFun|object|null|undefined} expr
+         * @param {sqlFun|object|null|undefined} min
+         * @param {sqlFun|object|null|undefined} max
+         * @param {Environment} context
          * @returns {string}
          */
         $sqlf.between = function (expr, min, max, context) {
@@ -540,8 +582,9 @@
         /**
          * gets the 'expression like mask' sql condition
          * @method like
-         * @param expr
-         * @param mask
+         * @param {sqlFun|object|null|undefined} expr
+         * @param {sqlFun|object|null|undefined} mask
+         * @param {Environment} context
          * @returns {string}
          */
         $sqlf.like = function (expr, mask, context) {
@@ -582,9 +625,11 @@
 
         /**
          * Get object from a string, assuming that the strings represents a given sql type
+         * @method getObject
          * @param {string} s
-         * @param sqlType
-         */
+         * @param {string} sqlType, one of the db specific allowed
+         * @return {object}
+         **/
         function getObject(s, sqlType) {
             if (charTypes[sqlType]) {
                 return s;
@@ -595,7 +640,7 @@
             if (floatTypes[sqlType]) {
                 return parseFloat(s);
             }
-
+            //TODO : date time management
             return s;
         }
 
