@@ -1,5 +1,5 @@
+/*global Environment,global,define */
 /*jslint nomen: true*/
-/*globals Environment global */
 ;
 'use strict';
 /**
@@ -87,7 +87,7 @@
         /**
          * Check if obj is not a real condition, giving true if it is null, undefined or empty string
          * @method isEmptyCondition
-         * @param {sqlFun} cond
+         * @param {string||sqlFun} cond
          * @returns {boolean}
          */
         function isEmptyCondition(cond) {
@@ -114,9 +114,9 @@
             //should differentiate basing on v type (string / number / date /boolean)
             if (_.isString(v)) {
                 if (noSurroundQuotes) {
-                    return v.replace(/\'/g, "''");
+                    return v.replace(/'/g, "''");
                 }
-                return "'" + v.replace(/\'/g, "''") + "'";
+                return "'" + v.replace(/'/g, "''") + "'";
             }
             if (_.isNumber(v)) {
                 return v.toString();
@@ -153,23 +153,23 @@
          *  undefined, arrays. Arrays are converted into lists.
          * @method toSql
          * @param {sqlFun|Array|object|null|undefined} v  function to be converted
-         * @param {Environment} [environment]  context into which the expression has to be evaluated
+         * @param {Environment} context  context into which the expression has to be evaluated
          * @return {string}
          * @example eq('a',1) is converted into 'a=1'
          *  eq('a','1') is converted into 'a=\'1\'' i.e. strings are quoted when evaluated
          *  [1,2,3] is converted into (1,2,3)
          */
-        function toSql(v, environment) {
+        function toSql(v, context) {
             if (isNullOrUndefined(v)) {
                 return 'null';
             }
             if (v.toSql) {
-                return v.toSql($sqlf, environment);
+                return v.toSql($sqlf, context);
             }
             if (_.isArray(v)) {
                 return '(' +
                     _.map(v, function (el) {
-                        return toSql(el, environment);
+                        return toSql(el, context);
                     }).join(',') + ')';
             }
             return quote(v);
@@ -178,16 +178,16 @@
         /**
          * Get the string filter from a sqlFunction
          * @method conditionToSql
-         * @param cond
-         * @param environment
+         * @param {sqlFun|string|null|undefined} cond
+         * @param {Environment} context
          * @return {string}
          */
-        function conditionToSql(cond, environment) {
+        function conditionToSql(cond, context) {
             if (isEmptyCondition(cond)) {
                 return null;
             }
             if (cond.toSql) {
-                return cond.toSql($sqlf, environment);
+                return cond.toSql($sqlf, context);
             }
             if (_.isString(cond)) {
                 return cond;
@@ -209,7 +209,8 @@
         /**
          * get the 'is null' condition over object o
          * @method isNull
-         * @param o
+         * @param {sqlFun|Array|object|null|undefined} o
+         * @param {Environment} context
          * @returns {string}
          * @example isnull('f') would be converted as 'f is null'
          */
@@ -219,8 +220,8 @@
 
         /**
          * gets the field name eventually prefixed by an alias table name
-         * @param field
-         * @param [alias]
+         * @param {string} field
+         * @param {string} [alias]
          * @returns {string}
          * @example field('id','customer') would be converted into 'customer.id',
          *  while field('id') would be converted into 'id'
@@ -235,8 +236,9 @@
         /**
          * gets the 'object are equal' representation for the db
          * @method eq
-         * @param a
-         * @param b
+         * @param {sqlFun|Array|object|null|undefined} a
+         * @param {sqlFun|Array|object|null|undefined} b
+         * @param {Environment} context
          * @returns {string}
          */
         $sqlf.eq = function (a, b, context) {
@@ -247,8 +249,9 @@
         /**
          * gets the 'object are not equal' representation for the db
          * @method ne
-         * @param a
-         * @param b
+         * @param {sqlFun|Array|object|null|undefined} a
+         * @param {sqlFun|Array|object|null|undefined} b
+         * @param {Environment} context
          * @returns {string}
          */
         $sqlf.ne = function (a, b, context) {
@@ -258,8 +261,8 @@
         /**
          * gets the 'a > b' representation for the db
          * @method gt
-         * @param {sqlFun|Array|object|null|undefined} a
-         * @param {sqlFun|Array|object|null|undefined} b
+         * @param {sqlFun|object|null|undefined} a
+         * @param {sqlFun|object|null|undefined} b
          * @param {Environment} context
          * @returns {string}
          * @example gt('a','b') would be converted into 'a>b'
@@ -311,7 +314,6 @@
          */
         $sqlf.coalesce = function (arr,context) {
             return 'coalesce' + doPar(toSql(expr, context));
-            doPar(expr.join(','));
         };
 
         /**
@@ -433,7 +435,6 @@
 
         /**
          * gets the result of boolean "and" between an array of condition
-         * @private
          * @method joinAnd
          * @param {string[]} arr
          * @returns {string}
@@ -448,7 +449,6 @@
 
         /**
          * gets the result of boolean "or" between an array of condition
-         * @private
          * @method joinOr
          * @param {string[]} arr
          * @returns {string}
@@ -480,6 +480,7 @@
          * gets the result of the sum of an array of expression
          * @method concat
          * @param {sqlFun|Array|object|null|undefined []} arr
+         * @param {Environment} context
          * @returns {string}
          * @example add(['a','b','c']) would give 'a+b+c'
          */
@@ -528,7 +529,7 @@
         /**
          * gets the expression distinct expr1, expr2,..
          * @method sum
-         * @param {sqlFun|object|null|undefined []} expr
+         * @param {sqlFun|object|null|undefined []} exprList
          * @param {Environment} context
          * @returns {string}
          */
