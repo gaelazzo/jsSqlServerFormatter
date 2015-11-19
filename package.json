@@ -4,7 +4,7 @@
   "description": "Query functions convertable into sql expressions",
   "main": "src/jsSqlServerFormatter.js",
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt karma:unit"
   },
   "dependencies": {
     "lodash": "~3.1.0",
