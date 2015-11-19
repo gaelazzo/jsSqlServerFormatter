@@ -1,5 +1,9 @@
+/*globals beforeEach,afterEach,describe,jasmine,it,expect,inject,spyOn,Environment */
+/*jslint nomen: true */
+/*jslint bitwise: true */
+
+;
 'use strict';
-/*globals beforeEach,afterEach,describe,jasmine,it,expect,inject,spyOn */
 
 var $q = jsDataQuery;
 var $qf = jsSqlServerFormatter;
@@ -7,6 +11,11 @@ var $qf = jsSqlServerFormatter;
 describe('DataQuery functions', function () {
   function fieldGet(field){return function(r){return r[field];};}
   var ds,
+      /**
+       * @private
+       * @property textCtx
+       * @type Environment
+       */
     testCtx = {
       myNull:null,
       a:1,
@@ -69,13 +78,13 @@ describe('DataQuery functions', function () {
     it('dates without times are written with the d notation', function () {
       //stupid js counts month starting by 0
       var d = new Date(2014, 11, 31);
-      expect($qf.quote(d)).toBe('{d \'20141231\'}');
+      expect($qf.quote(d)).toBe('{d \'2014-12-31\'}');
     });
 
     it('dates without times are written with the d notation', function () {
       //stupid js counts month starting by 0
       var d = new Date(2014, 11, 31);
-      expect($qf.quote(d,true)).toBe('{d \'20141231\'}');
+      expect($qf.quote(d,true)).toBe('{d \'2014-12-31\'}');
     });
 
     it('integer are rendered without dot', function () {
