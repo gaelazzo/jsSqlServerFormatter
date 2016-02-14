@@ -219,6 +219,18 @@
         };
 
         /**
+         * get the 'is not null' condition over object o
+         * @method isNull
+         * @param {sqlFun|Array|object|null|undefined} o
+         * @param {Environment} context
+         * @returns {string}
+         * @example isnull('f') would be converted as 'f is null'
+         */
+        $sqlf.isNotNull = function (o, context) {
+            return doPar(toSql(o, context) + " is not null");
+        };
+
+        /**
          * gets the field name eventually prefixed by an alias table name
          * @param {string} field
          * @param {string} [alias]
