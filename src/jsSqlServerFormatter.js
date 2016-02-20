@@ -106,6 +106,7 @@
         /**
          * Gives the sql string representation of an object
          * @method quote
+         * @public
          * @param v {object} literal constant
          * @param [noSurroundQuotes] if true strings are not surrounded with quotes
          * @returns {string}
@@ -152,6 +153,7 @@
          *  dataquery objects. This can be used to manage slightly more generic objects like null values,
          *  undefined, arrays. Arrays are converted into lists.
          * @method toSql
+         * @public
          * @param {sqlFun|Array|object|null|undefined} v  function to be converted
          * @param {Environment} context  context into which the expression has to be evaluated
          * @return {string}
@@ -178,6 +180,7 @@
         /**
          * Get the string filter from a sqlFunction
          * @method conditionToSql
+         * @public
          * @param {sqlFun|string|null|undefined} cond
          * @param {Environment} context
          * @return {string}
@@ -198,6 +201,7 @@
         /**
          * Surround expression in parenthesis
          * @method doPar
+         * @public
          * @param {string} expr
          * @returns {string}
          */
@@ -209,6 +213,7 @@
         /**
          * get the 'is null' condition over object o
          * @method isNull
+         * @public
          * @param {sqlFun|Array|object|null|undefined} o
          * @param {Environment} context
          * @returns {string}
@@ -221,6 +226,7 @@
         /**
          * get the 'is not null' condition over object o
          * @method isNull
+         * @public
          * @param {sqlFun|Array|object|null|undefined} o
          * @param {Environment} context
          * @returns {string}
@@ -273,6 +279,7 @@
         /**
          * gets the 'a > b' representation for the db
          * @method gt
+         * @public
          * @param {sqlFun|object|null|undefined} a
          * @param {sqlFun|object|null|undefined} b
          * @param {Environment} context
@@ -286,6 +293,7 @@
         /**
          * gets the aggregates of mimimum value
          * @method min
+         * @public
          * @param {sqlFun|Array|object|null|undefined} expr
          * @param {Environment} context
          * @returns {string}
@@ -297,6 +305,7 @@
         /**
          * gets the aggregates of max value
          * @method max
+         * @public
          * @param {sqlFun|Array|object|null|undefined} expr
          * @param {Environment} context
          * @returns {string}
@@ -309,6 +318,7 @@
         /**
          * gets a substring from the expression
          * @method substring
+         * @public
          * @param {sqlFun|Array|object|null|undefined} expr
          * @param {number} start
          * @param {number} len
@@ -320,6 +330,7 @@
         };
         /**
          * returns the  first object of the array that is not null
+         * @public
          * @param {object[]} arr
          * @param {Environment} context
          * @returns {string}
@@ -331,6 +342,7 @@
         /**
          * Convert an expression into integer
          * @method convertToInt
+         * @public
          * @param {sqlFun|Array|object|null|undefined} expr
          * @param {Environment} context
          * @return {string}
@@ -568,6 +580,7 @@
         /**
          * get the '(expr (bitwise and) testMask) equal to val ' sql condition
          * @method testMask
+         * @public
          * @param {sqlFun|object|null|undefined} expr
          * @param {sqlFun|object|null|undefined} mask
          * @param {sqlFun|object|null|undefined} val
@@ -582,6 +595,7 @@
         /**
          * get the 'expr between min and max' sql condition
          * @method between
+         * @public
          * @param {sqlFun|object|null|undefined} expr
          * @param {sqlFun|object|null|undefined} min
          * @param {sqlFun|object|null|undefined} max
