@@ -35,8 +35,8 @@
     "doc"
   ],
   "dependencies": {
-    "lodash": "~3.9.3",
-    "jsDataQuery": "jsDataQuery#*"
+    "lodash": "4.6.1",
+    "jsdataquery": "git://github.com/gaelazzo/jsDataQuery.git"
   },
   "devdependencies": {
     "jasmine": "~2.2.1"
