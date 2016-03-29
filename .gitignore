@@ -7,3 +7,8 @@ bower_components
 doc
 bin
 obj
+.ntvs_analysis.dat
+.vs
+jsSqlServerFormatter.njsproj
+jsSqlServerFormatter1.njsproj
+jsSqlServerFormatter.sln
