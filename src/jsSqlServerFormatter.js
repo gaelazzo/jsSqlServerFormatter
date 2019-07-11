@@ -501,6 +501,20 @@
         };
 
         /**
+         * gets the result of the multiply of an array of expression
+         * @method mul
+         * @param {sqlFun|Array|object|null|undefined []} arr
+         * @param {Environment} context
+         * @returns {string}
+         * @example mul(['a','b','c']) would give 'a*b*c'
+         */
+        $sqlf.mul = function (arr, context) {
+            return doPar(_.map(arr, function (a) {
+                return toSql(a, context);
+            }).join("*"));
+        };
+
+        /**
          * gets the result of the sum of an array of expression
          * @method concat
          * @param {sqlFun|Array|object|null|undefined []} arr
