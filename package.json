@@ -1,32 +1,25 @@
 {
   "name": "jsSqlServerFormatter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Query functions convertable into sql expressions",
   "main": "src/jsSqlServerFormatter.js",
   "scripts": {
-    "test": "grunt karma:unit"
+    "test": "grunt test"
   },
   "dependencies": {
-    "lodash": "4.7.13",
-    "jsDataQuery": "git://github.com/gaelazzo/jsDataQuery.git"
+    "jsDataQuery": "git://github.com/gaelazzo/jsDataQuery.git",
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
-    "grunt": "~0.4.5",
+    "grunt": "1.3.0",
     "grunt-contrib-watch": "1.0.0",
     "grunt-contrib-yuidoc": "1.0.0",
-    "jasmine-core": "2.2.0",
-    "jasmine-node": "2.0.0-beta4",
-    "grunt-jasmine-node-new": "https://github.com/gaelazzo/grunt-jasmine-node",
-    "jasmine-collection-matchers":"*",
-    "load-grunt-tasks": "^3.4.1",
-    "time-grunt": "^1.0.0",
-    "grunt-karma": "^0.10.1",
-    "karma": "^0.12.31",
-    "karma-jasmine": "^0.3.5",
-    "karma-junit-reporter": "^0.2.2",
-    "karma-phantomjs-launcher": "^0.1.4",
-    "karma-sauce-launcher": "^0.2.10",
-    "phantomjs": "~1.9.18"
+    "grunt-jasmine-node": "git+https://github.com/gaelazzo/grunt-jasmine-node.git",
+    "jasmine-collection-matchers": "*",
+    "jasmine-core": "3.6.0",
+    "jasmine-node": "3.0.0",
+    "load-grunt-tasks": "5.1.0",
+    "time-grunt": "^1.4.0"
   },
   "repository": {
     "type": "git",

@@ -2,14 +2,14 @@
 /*jslint nomen: true */
 /*jslint bitwise: true */
 
-;
-'use strict';
 
-var $q = jsDataQuery;
-var $qf = jsSqlServerFormatter;
+const $q= require('jsDataQuery').jsDataQuery,
+    $qf = require('../../src/jsSqlServerFormatter').jsSqlServerFormatter;
+
+function fieldGet(field){return function(r){return r[field];};}
 
 describe('DataQuery functions', function () {
-  function fieldGet(field){return function(r){return r[field];};}
+
   var ds,
       /**
        * @private
@@ -133,6 +133,17 @@ describe('DataQuery functions', function () {
   });
 
   describe('comparing functions', function (){
+    let testCtx = {
+      myNull:null,
+      a:1,
+      b:2,
+      c:3,
+      d:'four',
+      e:'five',
+      f:['a','b','c'],
+      g:{a:11, b:12, c:13}
+    };
+
     it ('eq should return a comparison', function(){
       var f = $q.eq('a',2);
       expect(f.toSql($qf)).toBe('(a=2)');
@@ -219,6 +230,17 @@ describe('DataQuery functions', function () {
   });
 
   describe('logical operators', function () {
+    let testCtx = {
+      myNull:null,
+      a:1,
+      b:2,
+      c:3,
+      d:'four',
+      e:'five',
+      f:['a','b','c'],
+      g:{a:11, b:12, c:13}
+    };
+
     it('and should join given function with AND', function () {
       var f = $q.and($q.eq('a', 2), $q.eq('b',3), $q.eq('c',4));
       expect(f.toSql($qf)).toBe('((a=2) and (b=3) and (c=4))');
@@ -240,6 +262,17 @@ describe('DataQuery functions', function () {
   });
   describe('evaluating functions', function (){
 
+    let testCtx = {
+      myNull:null,
+      a:1,
+      b:2,
+      c:3,
+      d:'four',
+      e:'five',
+      f:['a','b','c'],
+      g:{a:11, b:12, c:13}
+    };
+
     it('toSql of a string should give the quoted string', function (){
       expect($qf.toSql('a')).toBe('\'a\'');
     });
@@ -259,10 +292,12 @@ describe('DataQuery functions', function () {
 
 
     it('toSql of a query function should call the toSql method of the function', function () {
-      var q = $q.eq('a',2);
-      spyOn(q,'toSql').and.callThrough();
-      expect($qf.toSql(q)).toBe('(a=2)');
-      expect(q.toSql).toHaveBeenCalled();
+      var q1 = $q.eq('a',2);
+      var q2 = $q.eq('a',3);
+      var q3 = $q.and(q1,q2);
+      spyOn(q1,'toSql').andCallThrough();
+      expect(q3.toSql($qf)).toBe('((a=2) and (a=3))');
+      expect(q1.toSql).toHaveBeenCalled();
     });
 
 

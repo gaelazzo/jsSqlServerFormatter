@@ -45,26 +45,46 @@ module.exports = function (grunt) {
           }
         },
 
-        // Test settings
-        karma: {
-          unit: {
-            configFile: 'test/karma.conf.js',
-            autoWatch: false,
-            singleRun: true
-          },
-          unit_auto: {
-            configFile: 'test/karma.conf.js',
-            autoWatch: true,
-            singleRun: false
+          jasmine_node: {
+              all: [],
+              options: {
+                  coffee: false,
+                  verbose: false,
+                  match: '.',
+                  matchall: false,
+                  specFolders: ['./test/spec/'],
+                  projectRoot: '',
+                  //growl:true,
+                  //specNameMatcher: 'spec',
+                  forceExit: false,
+
+                  jUnit: {
+                      report: true,
+                      savePath: "./build/reports/jasmine/",
+                      useDotNotation: true,
+                      consolidate: true
+                  }
+              },
+              single: {
+                  options: {
+                      specFolders: ['./test/spec/'],
+                      autotest: false
+                  }
+              },
+              auto: {
+                  options: {
+                      autotest: true,
+                      forceExit: false
+                  }
+              }
+
           }
-        }
 
 
       }
   );
 
 
-  grunt.registerTask('default', [
-    'karma:unit'
-  ]);
+    grunt.registerTask('test', ['jasmine_node:single']);
+    grunt.registerTask('default', ['test']);
 };

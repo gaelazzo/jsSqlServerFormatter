@@ -1,65 +1,11 @@
 /*global Environment,global,define */
 /*jslint nomen: true*/
-;
-'use strict';
+const _ = require('lodash');
+
+
 /**
  * Class to be used with jsDataQuery in order to format expression for MS SQL SERVER database
  */
-(function (_) {
-        /** Used as a safe reference for `undefined` in pre-ES5 environments. (thanks lodash)*/
-        var undefined;
-
-        /** Used to determine if values are of the language type `Object`. (thanks lodash)*/
-        var objectTypes = {
-            'function': true,
-            'object': true
-        };
-
-        if (!Function.prototype.bind) {
-            Function.prototype.bind = function (oThis) {
-                if (typeof this !== "function") {
-                    // closest thing possible to the ECMAScript 5 internal IsCallable function
-                    throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
-                }
-
-                var aArgs = Array.prototype.slice.call(arguments, 1),
-                    fToBind = this,
-                    FNOP = function () {
-                    },
-                    fBound = function () {
-                        return fToBind.apply(this instanceof FNOP && oThis ? this : oThis,
-                            aArgs.concat(Array.prototype.slice.call(arguments)));
-                    };
-
-                FNOP.prototype = this.prototype;
-                fBound.prototype = new FNOP();
-
-                return fBound;
-            };
-        }
-
-        /**
-         * Used as a reference to the global object. (thanks lodash)
-         *
-         * The `this` value is used if it is the global object to avoid Greasemonkey's
-         * restricted `window` object, otherwise the `window` object is used.
-         */
-        var root = (objectTypes[typeof window] && window !== (this && this.window)) ? window : this;
-
-        /** Detect free variable `exports`. (thanks lodash) */
-        var freeExports = objectTypes[typeof exports] && exports && !exports.nodeType && exports;
-
-        /** Detect free variable `module`. (thanks lodash)*/
-        var freeModule = objectTypes[typeof module] && module && !module.nodeType && module;
-
-        /** Detect free variable `global` from Node.js or Browserified code and use it as `root`. (thanks lodash)*/
-        var freeGlobal = freeExports && freeModule && typeof global == 'object' && global;
-        if (freeGlobal && (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal || freeGlobal.self === freeGlobal)) {
-            root = freeGlobal;
-        }
-
-        /** Detect the popular CommonJS extension `module.exports`. Tthanks lodash */
-        var moduleExports = freeModule && freeModule.exports === freeExports && freeExports;
 
         /**
          * provides formatting facilities for Microsoft Sql Server query creation
@@ -687,38 +633,7 @@
 
         $sqlf.getObject = getObject;
 
-        // Some AMD build optimizers like r.js check for condition patterns like the following:
-        if (typeof define == 'function' && typeof define.amd == 'object' && define.amd) {
-            // Expose lodash to the global object when an AMD loader is present to avoid
-            // errors in cases where lodash is loaded by a script tag and not intended
-            // as an AMD module. See http://requirejs.org/docs/errors.html#mismatch for
-            // more details.
-            root.jsDataQuery = $sqlf;
 
-            // Define as an anonymous module so, through path mapping, it can be
-            // referenced as the "underscore" module.
-            define(function () {
-                return $sqlf;
-            });
-        }
-        // Check for `exports` after `define` in case a build optimizer adds an `exports` object.
-        else if (freeExports && freeModule) {
-            // Export for Node.js or RingoJS.
-            if (moduleExports) {
-                (freeModule.exports = $sqlf).jsSqlServerFormatter = $sqlf;
-            }
-            // Export for Narwhal or Rhino -require.
-            else {
-                freeExports.jsSqlServerFormatter = $sqlf;
-            }
-        }
-        else {
-            // Export for a browser or Rhino.
-            root.jsSqlServerFormatter = $sqlf;
-        }
-    }.call(this,
-        (typeof _ === 'undefined') ? require('lodash') : _
-    )
-);
-
-
+module.exports = {
+    jsSqlServerFormatter: $sqlf
+};
